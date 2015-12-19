@@ -1,0 +1,125 @@
+<!-- html delete account 
+	source:http://www.w3schools.com/sql/sql_delete.asp
+-->
+
+<html>
+	<head>
+
+		<title>DiscoverMe</title>
+
+		<style type="text/css">
+			html{
+				background: url(sadpuppy.jpg) no-repeat;
+				-webkit-background-size: cover;
+				-moz-background-size: cover;
+				-o-background-size: cover;
+				background-size: cover; 
+			}
+			h1{
+				font-size: 70px;
+				font-family: sans-serif;
+				color: white;
+				text-shadow: 3px 3px 2px black;
+			}
+			h2{
+				font-size: 20px;
+				font-family: sans-serif;
+				line-height: 20px;
+				text-align: center;
+				color: black;
+				text-shadow: 1px 1px 0px white;
+			}
+			#message{
+				font-size: 25px;
+				font-family: sans-serif;
+				font-weight:bolder;
+				text-align: center;
+				color:black;
+				text-shadow: 1px 1px 0px white;
+			}
+			a{
+				color:black;
+				font-style: italic;
+			}
+			a:hover{
+				color:black;
+				font-style: normal;
+			}
+			
+		</style>
+
+		<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript">
+
+		function goToHomePage(){
+			window.location = 'http://localhost:3000/login.html';
+		}
+
+		function goToErrorPage(){
+			window.location = 'http://localhost:3000/error.html';
+		}
+
+		function goToSuccessDeletePage(){
+			window.location = 'http://localhost:3000/successDelete.html'
+		}
+
+		$(document).ready(function(){
+			//ajax error function
+			$(document).ajaxError(function() {
+    			alert("Sorry, there was a problem!");
+  			});
+
+			//user wishes to create a new account
+			$("#delete").click(function(){
+				console.log("Create Clicked");
+				$.ajax({
+					url: "users/" + $("#idUsername").val() + "/" + $("#idPassword").val(),
+					type: "DELETE",
+					dataType: "text",
+					data: {	password: $("#password").val(),
+							city: $("#city").val(),
+							state: $("#state").val(),
+							country: $("#country").val()},
+					success: function(data){
+						console.log("Success");
+						if(data == 'OK'){
+							localStorage.clear();
+							goToSuccessDeletePage();
+						} else if(data == 'IncorrectInfo') {
+							console.log("incorrect info");
+							$('#status').text("Incorrect Information");
+							
+						} else if(data == 'ERROR'){
+							console.log('There was an error');
+							$('#status').text("There was an error");
+							
+						} else {
+							console.log('Error');
+							//goToErrorPage();
+						}
+					},
+					error: function(){
+						console.log("You have encountered an error");
+						//goToErrorPage();
+					}
+				});
+			});
+		});
+
+		</script>
+	</head>
+
+	<body>
+
+		<h1><center>DiscoverMe</center></h1>
+		<p id="message">Are You Sure You Want to Delete Your Account?</p>
+		<h2>
+		<p>Account Verification:</p>
+		<p>Username:<input id="idUsername" type="text" size="20"/></p>
+		<p>Password:<input id="idPassword" type="text" size="20"/></p>
+		<p><button id="delete">Delete Account</button></p>
+		<div id="status"></div>
+		<p align="center"><a href="http://localhost:3000/login.html">Return to Homepage</a></p>
+
+	</body>
+</html>

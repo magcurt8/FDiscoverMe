@@ -1,0 +1,184 @@
+<!-- html create new event -->
+
+<html>
+	<head>
+
+		<title>DiscoverMe</title>
+		<link rel="stylesheet" media="screen" href="style.css" />
+
+		<style type="text/css">
+		
+			.mainpage{
+				background: url(discover.png) no-repeat;
+				-webkit-background-size: cover;
+				-moz-background-size: cover;
+				-o-background-size: cover;
+				background-size: cover; 
+			}
+			h2{
+				font-size: 20px;
+				font-family: sans-serif;
+				line-height: 20px;
+				text-align: center;
+				color: white;
+				text-shadow: 1px 1px 0px #00cccc;
+			}
+			a{
+				color:white;
+				font-style: italic;
+			}
+			a:hover{
+				color:#20B2AA;
+				font-style: normal;
+			}
+			#status{
+				font-size: 20px;
+				font-family: sans-serif;
+				text-align: center;
+				color:white;
+			}
+			#message{
+				font-size: 35px;
+				font-family: sans-serif;
+				font-weight: bolder;
+				line-height: 35px;
+				text-align: center;
+				color: white;
+				text-shadow: 2px 2px 1px black;
+			}
+			
+		</style>
+
+		<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript">
+		function goToHomePage(){
+			window.location = 'http://localhost:3000/login.html';
+		}
+		function goToErrorPage(){
+			window.location = 'http://localhost:3000/error.html';
+		}
+		function goToSuccessCreateEvent(){
+			window.location = 'http://localhost:3000/bucketList.html';
+		}
+		$(document).ready(function(){
+			//ajax error function
+			$(document).ajaxError(function() {
+    			alert("Sorry, there was a problem!");
+  			});
+
+			$('#logout').click(function(){
+				localStorage.clear();
+				window.location = 'http://localhost:3000/test.html';
+			});
+  			
+			//user wishes to create a new account
+			$("#create").click(function(){
+				console.log("Create Clicked");
+				$.ajax({
+					url: "places/" + localStorage.getItem('username') + "/" + localStorage.getItem('password'),
+					type: "POST",
+					dataType: "json",
+					data: { name: $("#name").val(),
+							type: $("#type").val(),
+							city: $("#city").val(),
+							state: $("#state").val(),
+							country: $("#country").val()},
+					success: function(data){
+						console.log(data);
+						if(data.username){
+							localStorage['places'] = data.places;
+							goToSuccessCreateEvent();
+						} else if(data.status == 'BLANK') {
+							console.log('Missing data');
+							$('#status').text("Please fill out all the information");
+							if($("#name").val() !== ""){
+								$("#name").css("background-color", "white");
+							} else {
+								$("#name").css("background-color", "#993333");
+							}
+							if($("#type").val() !== ""){
+								$("#type").css("background-color", "white");
+							} else {
+								$("#type").css("background-color", "#993333");
+							}
+							if($("#city").val() !== ""){
+								$("#city").css("background-color", "white");
+							} else {
+								$("#city").css("background-color", "#993333");
+							}
+							if($("#state").val() !== ""){
+								$("#state").css("background-color", "white");
+							} else {
+								$("#state").css("background-color", "#993333");
+							}
+							if($("#country").val() !== ""){
+								$("#country").css("background-color", "white");
+							} else {
+								$("#country").css("background-color", "#993333");
+							}
+						} else if(data.status == 'PLACES'){
+							$('#status').text("You already have this in your bucket list.");
+						} else if(data.status == 'COMPLETED'){
+							$('#status').text("You have already completed this event.");
+						}else if(data.status == 'MADE ERROR'){
+							$('#status').text("Event Made.  Could not add to your bucket list.");
+						}else {
+							$('#status').text("ERROR");
+							goToErrorPage();
+						}
+					},
+					error: function(){
+						$('#status').text('ERROR ERROR');
+						goToErrorPage();
+					}
+				});
+			});
+		});
+		</script>
+	</head>
+
+	<body>
+		<h1 class="header" height="50px">DiscoverMe
+			<button style="float: right"id="logout">Logout</button>
+				<ul class="nav">
+ 					<li><a href="login.html" >Home</a></li>
+ 					<li><a href="quiz.html">Quiz</a></li>
+ 					<li><a href="bucketList.html">Bucket List: Current</a></li>
+ 					<li><a href="completed.html">Bucket List: Completed</a></li>
+ 					<li><a href="createEvent.html" class="is-active">Create Event</a></li>
+ 					<li><a href="search.html">Search</a></li>
+ 					<li><a href="settings.html">Settings</a></li>
+				</ul>
+			</h1>
+		<div class="mainpage">
+		<p id = "message">Create Event</p>
+		<h2>
+		<p>Name:<input id="name" type="text" size = "50"/></p>
+		<p>Type: <select id="type"></p>
+			<option></option>
+			<option>Arts and Entertainment</option>
+			<option>Amusement Park</option>
+			<option>College or University</option>
+			<option>Food and Drink</option>
+			<option>Historical Site</option>
+			<option>Landmark</option>
+			<option>Monument</option>
+			<option>Relaxation Spot</option>
+			<option>Sports</option>
+			<option>Other</option>
+		</select><br>
+		<p>City:<input id="city" type = "text" size = "20"></p>
+		<p>State/Territory:<input id="state" type = "text" size= "20"><p>
+		<p>Country:<select id="country"></p>
+			<option id=""></option>
+			<option id="US">United States</option>
+			<option id="AU">Australia</option>
+			<option id="UK">United Kingdom</option>
+		</select><br>
+		<p><button id="create">Create Event</button></p>
+		<div id="status"></div>
+		</h2>
+	</div>
+
+	</body>
+</html>

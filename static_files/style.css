@@ -1,0 +1,41 @@
+/** {
+   padding: 0;
+   margin: 0;
+}*/
+ 
+body {
+   /*background: #f4f1e5;*/
+   color: #544738;
+   font-family: helvetica, sans-serif;
+}
+.header{
+	text-align: center;
+	background:#000d33;
+	padding: 2rem;
+	color:#000000;
+	background: url(compass.jpg);
+	background-size: 50px 500px;
+}
+.nav{
+	position:top;
+	text-align: center;
+	padding-top: 2rem;
+}
+.nav li {
+ float: left;
+ list-style: none;
+ /*margin-right: 1em; */
+}
+.nav li a {
+ color:#FF3333;
+ text-shadow:1px 1px 0px #fff;
+ float: left;
+ font-size: 25px;
+ padding: 12px;
+}
+.nav li a.is-active{
+	color:#000000;
+}
+.nav li a:hover{
+	color:#33CC33;
+}

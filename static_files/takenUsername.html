@@ -1,0 +1,189 @@
+<html>
+	<head>
+
+		<title>DiscoverMe</title>
+
+		<style type="text/css">
+			html{
+				background: url(carly.png) no-repeat;
+				-webkit-background-size: cover;
+				-moz-background-size: cover;
+				-o-background-size: cover;
+				background-size: cover; 
+			}
+			h1{
+				font-size: 70px;
+				font-family: sans-serif;
+				color: white;
+				text-shadow: 3px 3px 2px #000066;
+			}
+			h2{
+				font-size: 20px;
+				font-family: sans-serif;
+				line-height: 20px;
+				text-indent: 500px;
+				text-align: center;
+				color: white;
+				text-shadow: 1px 1px 0px #000066;				
+			}
+			#really{
+				font-size:35px;
+				font-family: sans-serif;
+				text-indent:500px;
+				text-align: center;
+				color: #000066;
+				text-shadow: 1px 1px 0px white;
+			}
+			
+		</style>
+
+		<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript">
+
+		function goToHomePage(){
+			window.location = 'http://localhost:3000/login.html';
+		}
+
+		function goToBlankSpace(){
+			window.location = 'http://localhost:3000/blankspace.html';
+		}
+
+		function goToErrorPage(){
+			window.location = 'http://localhost:3000/error.html';
+		}
+
+		$(document).ready(function(){
+			//ajax error function
+			$(document).ajaxError(function() {
+    			alert("Sorry, there was a problem!");
+  			});
+
+  			//add to correct textboxes if there is a localStorage value
+			if(localStorage.getItem('Tempusername')){
+				$('#username').val(function(index, val){
+  					return val + localStorage.getItem('Tempusername');
+  				});
+			}
+  			
+			if(localStorage.getItem('Temppassword')){
+  				$('#password').val(function(index, val){
+  					return val + localStorage.getItem('Temppassword');
+  				});
+  			}
+
+  			if(localStorage.getItem('Tempcity')){
+  				$('#city').val(function(index, val){
+  					return val + localStorage.getItem('Tempcity');
+  				});
+  			}
+
+  			if(localStorage.getItem('Tempstate')){
+  				$('#state').val(function(index, val){
+  					return val + localStorage.getItem('Tempstate');
+  				});
+  			}
+
+  			if(localStorage.getItem('Tempcountry')){
+  				$('#country').val(function(index, val){
+  					return val + localStorage.getItem('Tempcountry');
+  				});
+  			}
+
+			//user wishes to create a new account
+			$("#create").click(function(){
+				console.log("Create Clicked");
+				$.ajax({
+					url: "users/",
+					type: "POST",
+					dataType: "text",
+					data: { username: $("#username").val(),
+							password: $("#password").val(),
+							city: $("#city").val(),
+							state: $("#state").val(),
+							country: $("#country").val()},
+					success: function(data){
+						console.log("Success");
+						if(data == 'OK'){
+							console.log("Successfully created new user");
+							localStorage['username'] = $("#username").val();
+							localStorage['password'] = $("#password").val();
+							localStorage['city'] = $("#city").val();
+							localStorage['state'] = $("#state").val();
+							localStorage['country'] = $("#country").val();
+							goToHomePage();
+						} else if(data == 'BLANK') {
+							console.log("blank space")
+							if($("#username").val() !== ""){
+								localStorage['Tempusername'] = $("#username").val();
+							}
+							if($('#password').val() !== ""){
+								localStorage['Temppassword'] = $("#password").val();
+							}		
+							if($('#city').val() !== ""){
+								localStorage['Tempcity'] = $("#city").val();
+							}	
+							if($('#state').val() !== ""){
+								localStorage['Tempstate'] = $("#state").val();
+							}	
+							if($('#country').val() !== ""){
+								localStorage['Tempcountry'] = $("#country").val();
+							}	
+							goToBlankSpace();
+						} else if(data == 'TAKEN'){
+							if($("#username").val() !== ""){
+								localStorage['Tempusername'] = $("#username").val();
+							}
+							if($('#password').val() !== ""){
+								localStorage['Temppassword'] = $("#password").val();
+							}		
+							if($('#city').val() !== ""){
+								localStorage['Tempcity'] = $("#city").val();
+							}	
+							if($('#state').val() !== ""){
+								localStorage['Tempstate'] = $("#state").val();
+							}	
+							if($('#country').val() !== ""){
+								localStorage['Tempcountry'] = $("#country").val();
+							}	
+						} else {
+							console.log('Error');
+							goToErrorPage();
+						}
+					},
+					error: function(){
+						console.log("You have encountered an error");
+						localStorage.clear();
+						goToErrorPage();
+					}
+				});
+			});
+		});
+
+		</script>
+	</head>
+
+	<body>
+
+		<h1><center>DiscoverMe</center></h1>
+		<p id="really">I know you really,really,really,really</p>
+		<p id="really">like your username, but it is already taken.</p>
+		<p id="really"></p>
+		<p id="really">Please choose another.</p>
+		<h2>
+		<p>Create an Account</p>
+		<p>Username:<input id="username" type="text" size = "20" style="background-color:#993333; color:black"/></p>
+		<p>Password: <input id="password" type = "text" size = "20"> </br></p>
+		<p>Current City:<input id="city" type = "text" size = "20"></p>
+		<p>State:<input id="state" type = "text" size= "20"><p>
+		<p>Country:<select id="country"></p>
+			<option id=""></option>
+			<option id="US">United States</option>
+			<option id="AU">Australia</option>
+			<option id="UK">United Kingdom</option>
+		</select><br>
+		<p><button id="create">Create Account</button></p>
+
+		</h2>
+
+	</body>
+</html>

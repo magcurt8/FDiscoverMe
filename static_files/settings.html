@@ -1,0 +1,67 @@
+<html>
+<head>
+		<meta charset=utf-8/>
+		<meta name="description" content="description">
+ 
+		<title>DiscoverMe | Settings</title>
+		<link rel="stylesheet" media="screen" href="style.css" />
+		<style type="text/css">
+		.mainpage{
+			padding-bottom: 20px;
+			padding-top: 20px;
+			background: #fff;
+			background-size: cover;
+			margin-right: 50px;
+			margin-left: 50px;
+			font-size: 50px;
+		}
+		#update{
+			width: 200px;
+			height: 100px;
+		}
+		#delete{
+			width: 200px;
+			height:100px;
+		}
+		</style>
+
+		<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript">
+
+		$(document).ready(function(){
+			$('#update').click(function(){
+				window.location='http://localhost:3000/update.html';
+			});
+
+			$('#delete').click(function(){
+				window.location='http://localhost:3000/delete.html';
+			});
+
+			$('#logout').click(function(){
+				localStorage.clear();
+				window.location = 'http://localhost:3000/test.html';
+			});
+		});
+	</script>
+</head>
+	<body>
+		<h1 class="header" height="50px">DiscoverMe
+			<button style="float: right"id="logout">Logout</button>
+			<ul class="nav">
+ 				<li><a href="login.html">Home</a></li>
+ 				<li><a href="quiz.html">Quiz</a></li>
+ 				<li><a href="bucketList.html">Bucket List: Current</a></li>
+ 				<li><a href="completed.html">Bucket List: Completed</a></li>
+ 				<li><a href="createEvent.html">Create Event</a></li>
+ 				<li><a href="search.html">Search</a></li>
+ 				<li><a href="settings.html" class="is-active">Settings</a></li>
+				</ul>
+		</h1>
+		<div class="mainpage" style="text-align:center">
+			<p align="center">Would you like to update your account?</p>
+ 			<button id="update">Update Account</button>
+ 			<p align="center">Would you like to delete your account?</p>
+			<button id="delete">Delete Account</button>
+		</div>
+	</body>
+</html>

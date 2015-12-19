@@ -1,0 +1,155 @@
+<html>
+	<head>
+	
+		<title>DiscoverMe</title>
+
+		<style type="text/css">
+			html{
+				background: url(Guo.png) no-repeat;
+				-webkit-background-size: cover;
+				-moz-background-size: cover;
+				-o-background-size: cover;
+				background-size: cover; 
+			}
+			h1{
+				font-size: 100px;
+				font-family: sans-serif;
+				color: white;
+				text-shadow: 1px 1px 0px #FF1493
+			}
+			h2{
+				font-size: 20px;
+				font-family: sans-serif;
+				line-height: 20px;
+				text-align: center;
+				color: white;
+				text-shadow: 1px 1px 0px #20B2AA
+			}
+			
+		</style>
+
+		<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript">
+
+		function goToHomePage(){
+			window.location = 'http://localhost:3000/login.html';
+		}
+
+		function goToBlankSpace(){
+			window.location = 'http://localhost:3000/blankspace.html';
+		}
+
+		function goToTakenUsername(){
+			window.location = 'http://localhost:3000/takenUsername.html';
+		}
+
+		function goToErrorPage(){
+			window.location = 'http://localhost:3000/error.html';
+		}
+
+
+		$(document).ready(function(){
+			//ajax error function
+			$(document).ajaxError(function() {
+    			alert("Sorry, there was a problem!");
+  			});
+
+			//clear everything in the local storage... nothing necessary to create an account
+			localStorage.clear();
+
+			//user wishes to create a new account
+			$("#create").click(function(){
+				console.log("Create Clicked");
+				$.ajax({
+					url: "users/",
+					type: "POST",
+					dataType: "text",
+					data: { username: $("#username").val(),
+							password: $("#password").val(),
+							city: $("#city").val(),
+							state: $("#state").val(),
+							country: $("#country").val()},
+					success: function(data){
+						console.log("Success");
+						if(data == 'OK'){
+							console.log("Successfully created new user");
+							localStorage['username'] = $("#username").val();
+							localStorage['password'] = $("#password").val();
+							localStorage['city'] = $("#city").val();
+							localStorage['state'] = $("#state").val();
+							localStorage['country'] = $("#country").val();
+							goToHomePage();
+						} else if(data == 'BLANK') {
+							console.log("blank space")
+							if($("#username").val() !== ""){
+								localStorage['Tempusername'] = $("#username").val();
+							}
+							if($('#password').val() !== ""){
+								localStorage['Temppassword'] = $("#password").val();
+							}		
+							if($('#city').val() !== ""){
+								localStorage['Tempcity'] = $("#city").val();
+							}	
+							if($('#state').val() !== ""){
+								localStorage['Tempstate'] = $("#state").val();
+							}	
+							if($('#country').val() !== ""){
+								localStorage['Tempcountry'] = $("#country").val();
+							}	
+							goToBlankSpace();
+						} else if(data == 'TAKEN'){
+							console.log('Taken');
+							if($("#username").val() !== ""){
+								localStorage['Tempusername'] = $("#username").val();
+							}
+							if($('#password').val() !== ""){
+								localStorage['Temppassword'] = $("#password").val();
+							}		
+							if($('#city').val() !== ""){
+								localStorage['Tempcity'] = $("#city").val();
+							}	
+							if($('#state').val() !== ""){
+								localStorage['Tempstate'] = $("#state").val();
+							}	
+							if($('#country').val() !== ""){
+								localStorage['Tempcountry'] = $("#country").val();
+							}	
+							goToTakenUsername();
+						} else {
+							console.log('Error');
+							goToErrorPage();
+						}
+					},
+					error: function(){
+						console.log("You have encountered an error");
+						localStorage.clear();
+						goToErrorPage();
+					}
+				});
+			});
+		});
+
+		</script>
+	</head>
+
+	<body>
+
+		<h1><center>DiscoverMe</center></h1>
+		<h2>
+		<p>Create an Account</p>
+		<p>Username:<input id="username" type="text" size = "20"/></p>
+		<p>Password: <input id="password" type = "text" size = "20"> </br></p>
+		<p>Current City:<input id="city" type = "text" size = "20"></p>
+		<p>State:<input id="state" type = "text" size= "20"><p>
+		<p>Country:<select id="country"></p>
+			<option id=""></option>
+			<option id="US">United States</option>
+			<option id="AU">Australia</option>
+			<option id="UK">United Kingdom</option>
+		</select><br>
+		<p><button id="create">Create Account</button></p>
+
+		</h2>
+
+	</body>
+</html>

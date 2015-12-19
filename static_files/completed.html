@@ -1,0 +1,144 @@
+<!-- HTML of things checked off bucket list -->
+
+<html>
+	<head>
+		<link rel="stylesheet" media="screen" href="style.css" />
+		<style type="text/css">
+			/*h1{
+				color: white;
+				text-shadow: 3px 3px 2px #000000;
+			}*/
+			h2{
+				text-align:center;
+				color: #336699;
+			}
+			.mainpage{
+				background: url(paper.gif) no-repeat;
+				height:100%;
+				background-attachment: fixed;
+				-webkit-background-size: cover;
+				-moz-background-size: cover;
+				-o-background-size: cover;
+				background-size: cover; 
+			}
+			/*a{
+				font-size:17px;
+				color:black;
+				font-style: italic;
+				text-shadow: 1px 1px 0px white;
+			}
+			a:hover{
+				font-size:17px;
+				color:blue;
+				font-style: normal;
+				text-shadow: 1px 1px 0px white;
+			}*/
+			.myButtons{
+				color: black;
+				background-color: #ffe5e5;
+				text-align:center;
+    			width: 32em;
+    			height: 6em;
+    			border-radius: 10px;
+			}
+			.myButtons:hover{
+				background-color: #009900;
+			}
+			#message{
+				font-size: 30px;
+				font-weight:bold;
+				color: #cc0000;
+			}
+			
+		</style>
+
+		<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+		<script src="http://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+		<script type="text/javascript">
+
+		function goToErrorPage(){
+			window.location = 'http://localhost:3000/error.html';
+		}
+
+		function goToLogin(){
+			window.location = 'http://localhost:3000/test.html';
+		}
+
+
+		$(document).ready(function(){
+
+			$('#logout').click(function(){
+				localStorage.clear();
+				window.location = 'http://localhost:3000/test.html';
+			});
+
+			if(localStorage.getItem('username')){
+				$('#bucket').append(" for " + localStorage.getItem('username'));
+			} else {
+				goToLogin();
+			}
+
+			if(localStorage.getItem('completed') == null | localStorage.getItem('completed') == "[]"){
+				$('#message').text("You have no completed places or events to display at this time.");
+			} else {
+				document.getElementById('theElements').appendChild(document.createElement("BR"));
+				document.getElementById('theElements').appendChild(document.createElement("BR"));
+				var buttons = [];
+				var locations = JSON.parse(localStorage.getItem('completed'));
+				for(var i = 0; i < locations.length; i++){
+					buttons[i] = document.createElement("BUTTON");
+					var name = document.createTextNode(locations[i].name);
+					var lineBreak1 = document.createElement("BR");
+					var lineBreak2 = document.createElement("BR");
+					var city = document.createTextNode(locations[i].city);
+					var state = document.createTextNode(locations[i].state);
+					var country = document.createTextNode(locations[i].country);
+					var comma1 = document.createTextNode(", ");
+					var comma2 = document.createTextNode(", ");
+					var type = document.createTextNode(locations[i].type);
+					buttons[i].setAttribute("id", JSON.stringify(locations[i]));
+					buttons[i].setAttribute("class", "myButtons");
+					buttons[i].setAttribute("width", "400px");
+					console.log(buttons[i].getAttribute('id'));
+					buttons[i].style.textAlign = 'left';
+					buttons[i].style.fontSize = '15px';
+					buttons[i].appendChild(name);
+					buttons[i].appendChild(lineBreak1);
+					buttons[i].appendChild(city);
+					buttons[i].appendChild(comma1);
+					buttons[i].appendChild(state);
+					buttons[i].appendChild(comma2);
+					buttons[i].appendChild(country);
+					buttons[i].appendChild(lineBreak2);
+					buttons[i].appendChild(type);
+					//buttons[i].addEventListener('click', myFunction);					
+					document.getElementById('theElements').appendChild(buttons[i]);					
+				}
+			}
+		});
+			
+
+		</script>
+
+	</head>
+
+	<body>
+			<h1 class="header" height="50px">DiscoverMe
+				<button style="float: right"id="logout">Logout</button>
+				<ul class="nav">
+ 					<li><a href="login.html">Home</a></li>
+ 					<li><a href="quiz.html">Quiz</a></li>
+ 					<li><a href="bucketList.html">Bucket List: Current</a></li>
+ 					<li><a href="completed.html" class="is-active">Bucket List: Completed</a></li>
+ 					<li><a href="createEvent.html">Create Event</a></li>
+ 					<li><a href="search.html">Search</a></li>
+ 					<li><a href="settings.html">Settings</a></li>
+				</ul>
+			</h1>
+				<div class="mainpage">
+					<h1 align="center" id="bucket">Completed Bucket List</h1>
+					<div style="position: absolute; top:360px; left:220px; width:1000px; height:30px" id="message"></div>
+					<h2><div id="theElements"></div></h2>
+				</div>
+	</body>
+</html>

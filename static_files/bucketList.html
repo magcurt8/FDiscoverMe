@@ -1,0 +1,329 @@
+<!-- source: http://www.w3schools.com/jsref/met_document_createelement.asp
+	 source: http://stackoverflow.com/questions/1819878/changing-button-color-programatically
+	 source: http://www.cssfontstack.com/Papyrus
+	 source: http://stackoverflow.com/questions/19848148/how-can-you-change-form-button-appearance
+	 source: http://stackoverflow.com/questions/13199225/use-javascript-jquery-to-dynamically-create-multiple-html-buttons-with-differe
+	 source: http://stackoverflow.com/questions/18648500/add-id-class-to-objects-from-createelement-method
+	 source: http://stackoverflow.com/questions/9389952/how-to-change-background-color-of-jquery-ui-dialog
+	 source: http://stackoverflow.com/questions/14850153/jquery-ui-dialog-work-with-the-background-only-opacity-without-graying-the-fon
+	 source: http://jsfiddle.net/taditdash/vvjj8/
+	 source: http://stackoverflow.com/questions/28735497/how-do-i-insert-a-close-button-inside-my-popup
+	 source: http://dinbror.dk/bpopup/
+-->
+
+<html>
+	<head>
+		<link rel="stylesheet" media="screen" href="style.css" />
+		<style type="text/css">
+			.mainpage{
+				background: url(paper.gif) no-repeat;
+				height:1000px;
+				background-attachment: fixed;
+				-webkit-background-size: cover;
+				-moz-background-size: cover;
+				-o-background-size: cover;
+				background-size: cover; 
+			}
+			.myButtons{
+				color: black;
+				background-color: #ffe5e5;
+    			width: 32em;
+    			height: 6em;
+    			border-radius: 12px;
+    			align:center;
+			}
+			.myButtons:hover{
+				background-color: #ffa64d;
+			}
+			#message{
+				font-size: 30px;
+				font-family: Papyrus, fantasy;
+				font-weight:bold;
+				color: #cc0000;
+			}
+			#popup, .bMulti {
+    			background-color: #FFF;
+    			border-radius: 10px 10px 10px 10px;
+    			box-shadow: 0 0 25px 5px #999;
+    			color: #111;
+    			display: none;
+    			min-width: 350px;
+    			min-height: 150px;
+    			padding: 25px;
+			}
+			#popup .logo {
+   				color: #2B91AF;
+    			/*font: bold 325% 'Petrona',sans;*/
+    			text-align: center;
+			}
+			.button.b-close, .button.bClose {
+    			border-radius: 7px 7px 7px 7px;
+    			box-shadow: none;
+    			font: bold 131% sans-serif;
+    			padding: 0 6px 2px;
+    			position: absolute;
+    			right: -7px;
+    			top: -7px;
+			}
+			.button {
+    			background-color: #b3b3b3;
+    			border-radius: 10px;
+    			box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+    			color: #FFF;
+    			cursor: pointer;
+    			display: inline-block;
+    			padding: 10px 20px;
+    			text-align: center;
+    			text-decoration: none;
+			}
+			#popup{
+				text-align:center;
+			}
+			.modal-body {
+    				min-height: 350px;
+    				-webkit-overflow-scrolling: touch;
+    				overflow: visible;
+			}
+			.fixed-dialog{
+  				position: fixed;
+  				top: 50px;
+  				left: 50px;
+			}
+			.ui-widget {
+    			/*font-family: helvetica, sans-serif;*/
+    			font-size: .8em;
+    			opacity:1.0;
+			}
+
+			.ui-widget-content {
+    			background: rgba(0,0,0,0);
+    			color: #222222;
+			}
+
+			.ui-dialog {
+    			left: 0;
+    			outline: 0 none;
+    			padding: 0 !important;
+    			position: absolute;
+    			top: 0;
+
+			}
+			.ui-dialog .ui-dialog-content {
+				background-color: #FFF;
+    			border-radius: 10px 10px 10px 10px;
+    			background: none repeat scroll 0 0 transparent;
+   				border: 0 none;
+    			overflow: auto;
+   				position: relative;
+    			padding: 25px;
+    			box-shadow: 0 0 25px 25px #ffffff;
+			}
+			.ui-dialog-titlebar-close {
+  				background-color: #2B91AF;
+    				border-radius: 10px;
+    				box-shadow: 0 2px 3px rgba(225, 225, 225, 0.3);
+    				color: #FFF;
+    				cursor: pointer;
+    				display: inline-block;
+    				padding: 5px 10px;
+    				color:white;
+    				font-weight:bold;
+    				text-decoration: none;
+			}
+			.ui-dialog-titlebar-close:hover{
+				background-color: #b3b3b3;
+				font-style: italic;
+				color:black;
+			}
+			.ui-widget-overlay {
+   				background-color: white;
+			}
+			h2{
+				text-align:center;
+				color: #336699;
+			}
+			
+			
+		</style>
+
+		<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+		<script src="http://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+		<script type="text/javascript">
+
+		function goToErrorPage(){
+			window.location = 'http://localhost:3000/error.html';
+		}
+
+		function goToLogin(){
+			window.location = 'http://localhost:3000/test.html';
+		}
+
+		$(document).ready(function(){
+
+			$('#logout').click(function(){
+				localStorage.clear();
+				window.location = 'http://localhost:3000/test.html';
+			});
+
+			if(localStorage.getItem('username')){
+				$('#bucket').append(" for " + localStorage.getItem('username'));
+			} else {
+				goToLogin();
+			}
+
+			console.log(localStorage.getItem('places'));
+
+			if(localStorage.getItem('places') == null | localStorage.getItem('places') == "[]"){
+				$('#message').text("You have no places or events to display at this time.");
+			} else {
+				//document.getElementById('theElements').appendChild(document.createElement("BR"));
+				document.getElementById('theElements').appendChild(document.createElement("BR"));
+				var buttons = [];
+				var locations = JSON.parse(localStorage.getItem('places'));
+				for(var i = 0; i < locations.length; i++){
+					buttons[i] = document.createElement("BUTTON");
+					var name = document.createTextNode(locations[i].name);
+					var lineBreak1 = document.createElement("BR");
+					var lineBreak2 = document.createElement("BR");
+					var city = document.createTextNode(locations[i].city);
+					var state = document.createTextNode(locations[i].state);
+					var country = document.createTextNode(locations[i].country);
+					var comma1 = document.createTextNode(", ");
+					var comma2 = document.createTextNode(", ");
+					var type = document.createTextNode(locations[i].type);
+					buttons[i].setAttribute("id", JSON.stringify(locations[i]));
+					buttons[i].setAttribute("class", "myButtons");
+					buttons[i].setAttribute("width", "400px");
+					buttons[i].setAttribute("align", "center");
+					console.log(buttons[i].getAttribute('id'));
+					buttons[i].style.textAlign = 'left';
+					buttons[i].style.fontSize = '15px';
+					buttons[i].appendChild(name);
+					buttons[i].appendChild(lineBreak1);
+					buttons[i].appendChild(city);
+					buttons[i].appendChild(comma1);
+					buttons[i].appendChild(state);
+					buttons[i].appendChild(comma2);
+					buttons[i].appendChild(country);
+					buttons[i].appendChild(lineBreak2);
+					buttons[i].appendChild(type);
+					buttons[i].addEventListener('click', myFunction);
+					document.getElementById('theElements').appendChild(buttons[i]);
+					//document.getElementById('theElements').appendChild(document.createElement("BR"));
+					//document.getElementById('theElements').appendChild(document.createElement("BR"));					
+				}
+			}
+
+			function myFunction(){
+				var id = this.id;
+				var info = JSON.parse(this.id);
+				$('#popup').empty();
+				$('#popup').dialog({
+					width: 400,
+					height: 260,
+  					autoOpen: true,
+  					dialogClass: "fixed-dialog",
+  					show: {
+    					effect: "drop",
+    					duration: 1000
+  					},
+  					hide: {
+    					effect: "explode",
+    					duration: 200
+  					}
+				});
+
+				var html = $("#popup").html();
+                $("#popup").html(html + "<br>Do you wish to check off or remove:<br><br>" + info.name + "<br>" + info.city + ", " + info.state + ", " + info.country + "<br>" + info.type + "<br><br> from your bucket list?<br><br><button id='checkOff' class='button'>Check Off</button>          <button id='remove' class='button'>Remove</button>");
+
+               document.getElementById('checkOff').addEventListener('click', function(){
+               		$.ajax({
+						url: "complete/" + localStorage.getItem('username') + "/" + localStorage.getItem('password'),
+						type: "PUT",
+						dataType: "json",
+						data: { name: info.name,
+								type: info.type,
+								city: info.city,
+								state: info.state,
+								country: info.country},
+						success: function(data){
+							console.log(data);
+							if(data.username){
+								localStorage['places'] = data.places;
+								localStorage['completed'] = data.completed;
+								document.getElementById('theElements').removeChild(document.getElementById(id));
+								if(localStorage.getItem('places') == null | localStorage.getItem('places') == "[]"){
+									$('#message').text("You have no places or events to display at this time.");
+								}
+								$('#popup').dialog('close');
+							} else if(data.status){
+								goToErrorPage();
+							} else {
+								goToErrorPage();
+							}
+						},
+						error: function(){
+							goToErrorPage();
+						}
+					});
+               });
+
+               document.getElementById('remove').addEventListener('click',function(){
+               	$.ajax({
+						url: "remove/" + localStorage.getItem('username') + "/" + localStorage.getItem('password'),
+						type: "PUT",
+						dataType: "json",
+						data: { name: info.name,
+								type: info.type,
+								city: info.city,
+								state: info.state,
+								country: info.country},
+						success: function(data){
+							console.log(data);
+							if(data.username){
+								localStorage['places'] = data.places;
+								document.getElementById('theElements').removeChild(document.getElementById(id));
+								if(localStorage.getItem('places') == null | localStorage.getItem('places') == "[]"){
+									$('#message').text("You have no places or events to display at this time.");
+								}
+								$('#popup').dialog('close');
+							} else if(data.status){
+								goToErrorPage();
+							} else {
+								goToErrorPage();
+							}
+						},
+						error: function(){
+							goToErrorPage();
+						}
+					});
+               });
+			}
+		});
+
+		</script>
+
+	</head>
+
+	<body>
+		<h1 class="header" height="50px">DiscoverMe
+			<button style="float: right"id="logout">Logout</button>
+				<ul class="nav">
+ 					<li><a href="login.html">Home</a></li>
+ 					<li><a href="quiz.html">Quiz</a></li>
+ 					<li><a href="bucketList.html" class="is-active">Bucket List: Current</a></li>
+ 					<li><a href="completed.html">Bucket List: Completed</a></li>
+ 					<li><a href="createEvent.html">Create Event</a></li>
+ 					<li><a href="search.html">Search</a></li>
+ 					<li><a href="settings.html">Settings</a></li>
+				</ul>
+			</h1>
+		<div class="mainpage">
+			<h1 align="center" id="bucket">Bucket List</h1>
+			<div style="position: absolute; top:360px; left:360px; width:700px; height:30px" id="message"></div>
+			<div id="popup"></div>
+			<h2><div id="theElements"></div></h2>
+		</div>
+		
+	</body>
+</html>

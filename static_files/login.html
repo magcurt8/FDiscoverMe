@@ -1,0 +1,77 @@
+<!-- login page -->
+
+<html>
+	<head>
+		<meta charset=utf-8/>
+		<meta name="description" content="description">
+ 
+		<title>DiscoverMe | Home</title>
+ 
+		<link rel="stylesheet" media="screen" href="style.css" />
+		<style type="text/css">
+		body{
+			background: #f4f1e5;
+		}
+		.mainpage{
+			padding-bottom: 20px;
+			padding-top: 20px;
+			background: #fff;
+			background-size: cover;
+			margin-right: 50px;
+			margin-left: 50px;
+			font-size: 50px;
+		}
+		</style>
+
+		<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script src="http://dinbror.dk/bpopup/assets/jquery.bpopup-0.9.4.min.js"></script>
+		<script src="http://dinbror.dk/bpopup/assets/jquery.easing.1.3.js"></script>
+		<script type="text/javascript">
+
+		function goToLogin(){
+			window.location = 'http://localhost:3000/test.html';
+		}
+
+		$(document).ready(function(){
+
+			if(localStorage.getItem('username') && localStorage.getItem('password')){
+				$("#person").append("Hello, " + localStorage.getItem('username')+"!");
+				$("#location").append("Home Location:  " + localStorage.getItem('city') + ", " + localStorage.getItem('state') + ", " + localStorage.getItem('country'));
+				/*this is where we would implement the future destinations based off of the quiz results. We would set the values into a list and separate them by commas. Or we could just have a for loop here iterating through the list and we could add a comma between each iteration. Probably the second option would be easiest. Just throwing this in here now although the quiz is not fully made yet. 
+				/*$("#destlocation").append("Desired Destinations: "+localStorage.getItem('destinations'))*/
+				
+			} else {
+				goToLogin();
+			}
+			
+			$('#logout').click(function(){
+				localStorage.clear();
+				window.location = 'http://localhost:3000/test.html';
+			});
+		});
+
+		
+		</script>
+
+	</head>
+
+	<body>
+			<h1 class="header" height="50px">DiscoverMe
+			<button style="float: right"id="logout">Logout</button>
+				<ul class="nav">
+ 					<li><a href="login.html" class="is-active">Home</a></li>
+ 					<li><a href="quiz.html">Quiz</a></li>
+ 					<li><a href="bucketList.html">Bucket List: Current</a></li>
+ 					<li><a href="completed.html">Bucket List: Completed</a></li>
+ 					<li><a href="createEvent.html">Create Event</a></li>
+ 					<li><a href="search.html">Search</a></li>
+ 					<li><a href="settings.html">Settings</a></li>
+				</ul>
+			</h1>
+		<div class="mainpage">
+			<div id="person"></div><br/>
+			<div id="location"></div>
+		</div>
+	</body>
+</html>
