@@ -44,25 +44,21 @@ app.post('/users', function(req,res){
 	db.get('SELECT * FROM peeps WHERE username=?', [username], function(err,rows){
 		if(err){
 			res.send('ERROR');
-			return;
 		} else {
-			if(rows == undefined){
+			if(rows === undefined){
 				var thePlaces = [];
 				var places = JSON.stringify(thePlaces);
 				var theCompletes = [];
-				var completed = JSON.stringify(theCompletes)
+				var completed = JSON.stringify(theCompletes);
 				var stmt = db.prepare("INSERT into peeps VALUES (?,?,?,?,?,?,?)");
 				stmt.run(username,password,city,state,country,places,completed);
 				stmt.finalize();
 				res.send('OK');
-				return;
 			} else {
 				res.send('TAKEN');
-				return;
 			}
 		}
 	});
-	return;	
 });
 
 //user get request
@@ -70,23 +66,19 @@ app.get('/users/*/*', function(req,res){
 	db.get('SELECT * FROM peeps WHERE username=?', req.params[0], function(err,rows){
 		if(err){
 			res.send({status: "ERROR"});
-			return;
 		} else {
 			console.log(rows);
-			if(rows == undefined){
+			if(rows === undefined){
 				res.send({failedUsername: req.params[0], failedPassword: req.params[1]});
 				return;
 			}
-			if(rows.password == req.params[1]){
+			if(rows.password === req.params[1]){
 				res.send(rows);
-				return;	
 			} else {
 				res.send({failedUsername: req.params[0], failedPassword: req.params[1]});
-				return;
 			}	
 		}
 	});
-	return;
 });
 
 app.put('/users/*/*', function(req,res){
@@ -104,30 +96,25 @@ app.put('/users/*/*', function(req,res){
 	db.get('SELECT * FROM peeps WHERE username=?', req.params[0], function(err,rows){
 		if(err){
 			res.send("ERROR");
-			return;
 		} else {
 			console.log(rows);
-			if(rows == undefined){
+			if(rows === undefined){
 				res.send("IncorrectInfo");
 				return;
 			}
-			if(rows.password == req.params[1]){
+			if(rows.password === req.params[1]){
 				db.run('UPDATE peeps SET password = ?, city = ?, state = ?, country = ? WHERE username = ?', [password,city,state,country,req.params[0]], function(err,rows){
 					if(err){
 						res.send("ERROR");
-						return;
 					} else {
 						res.send("OK");
-						return;
 					}
 				});	
 			} else {
 				res.send("IncorrectInfo");
-				return;
-			}	
+			}
 		}
 	});
-	return;
 });
 
 //user delete request
@@ -135,30 +122,24 @@ app.delete('/users/*/*', function(req,res){
 	db.get('SELECT * FROM peeps WHERE username=?', req.params[0], function(err,rows){
 		if(err){
 			res.send("ERROR");
-			return;
 		} else {
 			console.log(rows);
-			if(rows == undefined){
+			if(rows === undefined){
 				res.send("IncorrectInfo");
-				return;
 			}
-			if(rows.password == req.params[1]){
+			if(rows.password === req.params[1]){
 				db.run('DELETE FROM peeps WHERE username = ?', req.params[0], function(err,rows){
 					if(err){
 						res.send("ERROR");
-						return;
 					} else {
 						res.send("OK");
-						return;
 					}
 				});	
 			} else {
 				res.send("IncorrectInfo");
-				return;
-			}	
+			}
 		}
 	});
-	return;
 });
 
 app.post('/places/*/*', function(req,res){
@@ -173,19 +154,17 @@ app.post('/places/*/*', function(req,res){
 
 	if(!name | !type | !city | !state | !country){
 		res.send({status:'BLANK'});
-		return;
 	}
 
 	db.get('SELECT * from locate WHERE name=? AND city=? AND state=? AND country=?', [name,city,state,country], function(err,rows){
 		if(err){
 			res.send({status: 'ERROR'});
-			return;
 		} else {
 			//create current count to update the popularity of a location
 			var currentCount;
-			if(rows == undefined){
+			if(rows === undefined){
 				//insert into locate table
-				var currentCount = 1;
+				currentCount = 1;
 				var stmt = db.prepare("INSERT into locate VALUES (?,?,?,?,?,?)");
 				stmt.run(name,type,city,state,country,currentCount);
 				stmt.finalize();
@@ -194,8 +173,7 @@ app.post('/places/*/*', function(req,res){
 				db.run('UPDATE locate SET count =? WHERE name =? AND city=? AND state=? AND country=?', [currentCount,name,city,state,country], function(err,rows){
 					if(err){
 						res.send({status: 'ERROR'});
-						return;
-					} 
+					}
 				});	
 			}
 			
@@ -204,9 +182,8 @@ app.post('/places/*/*', function(req,res){
 			db.get('SELECT * from peeps WHERE username=?', req.params[0],function(err,row){
 				if(err){
 					res.send({status:'MADE ERROR'});
-					return;
 				} else {
-					if(row == undefined){
+					if(row === undefined){
 						res.send({status: 'ERROR'});
 						return;
 					}
@@ -214,17 +191,21 @@ app.post('/places/*/*', function(req,res){
 					var thePlaces = JSON.parse(row.places);
 					var theCompletes = JSON.parse(row.completed);
 
-					for(var i = 0; i < thePlaces.length; i++){
-						if(thePlaces[i].name == name & thePlaces[i].city == city & thePlaces[i].state == state & thePlaces[i].country == country){
+					for(let i = 0; i < thePlaces.length; i++){
+						if(thePlaces[i].name === name
+						   && thePlaces[i].city === city
+						   && thePlaces[i].state === state
+						   && thePlaces[i].country === country){
 							res.send({status: 'PLACES'});
-							return;
 						}
 					}
 
-					for(var i=0; i < theCompletes.length; i++){
-						if(theCompletes[i].name == name & theCompletes[i].city == city & theCompletes[i].state == state & theCompletes[i].country == country){
+					for(let i=0; i < theCompletes.length; i++){
+						if(theCompletes[i].name === name
+						   && theCompletes[i].city === city
+						   && theCompletes[i].state === state
+						   && theCompletes[i].country === country){
 							res.send({status: 'COMPLETED'});
-							return;
 						}
 					}
 
@@ -234,33 +215,29 @@ app.post('/places/*/*', function(req,res){
 									"state": state,
 									"country": country});
 
-					var add = JSON.stringify(thePlaces);
+					let add = JSON.stringify(thePlaces);
 
 					//console.log(add);
 
-					if(row.password == req.params[1]){
+					if(row.password === req.params[1]){
 						db.run('UPDATE peeps SET places=? WHERE username=?', [add,req.params[0]], function(err,rows){
 							if(err){
 								res.send({status:'ERROR'});
-								return;
 							} else {
 								db.get('SELECT * FROM peeps WHERE username=?', req.params[0], function(err,rows){
 									if(err){
 										res.send({status:'MADE ERROR'});
-										return;
 									} else {
 										console.log(rows);
-										if(rows == undefined){
+										if(rows === undefined){
 											res.send({status: 'MADE ERROR'});
 											return;
 										}
-										if(rows.password == req.params[1]){
+										if(rows.password === req.params[1]){
 											console.log(rows);
 											res.send(rows);
-											return;	
 										} else {
 											res.send({status: 'MADE ERROR'});
-											return;
 										}
 									}
 								}); 
@@ -268,22 +245,20 @@ app.post('/places/*/*', function(req,res){
 						});
 					} else {
 						res.send({status: 'ERROR'});
-						return;
 					}
 				}
 			});
 		}
 	});
-	return;
 });
 
 app.put('/complete/*/*', function(req,res){
-	var postBody = req.body;
-	var name = postBody.name;
-	var type = postBody.type;
-	var city = postBody.city;
-	var state = postBody.state;
-	var country = postBody.country;
+	const postBody = req.body;
+  	const name = postBody.name;
+  	const type = postBody.type;
+  	const city = postBody.city;
+  	const state = postBody.state;
+  	const country = postBody.country;
 
 	console.log("Passed parameters: " + name + " " + type + " " + city + " " + state + " " + country);
 
@@ -291,24 +266,24 @@ app.put('/complete/*/*', function(req,res){
 		if(err){
 			console.log('first error');
 			res.send({status: "ERROR"});
-			return;
 		} else {
 			console.log(rows);
-			if(rows == undefined){
+			if(rows === undefined){
 				console.log('rows undefined');
 				res.send({status: "IncorrectInfo"});
 				return;
 			}
-			if(rows.password == req.params[1]){
+			if(rows.password === req.params[1]){
 				var theArray = JSON.parse(rows.places);
 
 				console.log(theArray.length);
 
-				var newArray = [];
-
 				for(var i = 0; i < theArray.length; i++){
 					console.log("checking: " + theArray[i].name);
-					if(theArray[i].name == name & theArray[i].city == city & theArray[i].state == state & theArray[i].country == country){
+					if(theArray[i].name === name
+					   && theArray[i].city === city
+					   && theArray[i].state === state
+					   && theArray[i].country === country){
 						console.log("Splicing: " + theArray[i].name);
 						theArray.splice(i,1);
 					}
@@ -336,25 +311,20 @@ app.put('/complete/*/*', function(req,res){
 					if(err){
 						console.log('update error');
 						res.send({status:'ERROR'});
-						return;
 					} else {
 						db.get('SELECT * FROM peeps WHERE username=?', req.params[0], function(err,rows){
 							if(err){
 								res.send({status:'ERROR'});
-								return;
 							} else {
 								console.log(rows);
-								if(rows == undefined){
+								if(rows === undefined){
 									res.send({status: 'ERROR'});
-									return;
 								}
-								if(rows.password == req.params[1]){
+								if(rows.password === req.params[1]){
 									console.log(rows);
 									res.send(rows);
-									return;	
 								} else {
 									res.send({status: 'ERROR'});
-									return;
 								}
 							}
 						}); 
@@ -363,11 +333,9 @@ app.put('/complete/*/*', function(req,res){
 			} else {
 				console.log('incorrect password');
 				res.send({status: "IncorrectInfo"});
-				return;
-			}	
+			}
 		}
 	});
-	return;
 });
 
 
@@ -385,11 +353,11 @@ app.put('/remove/*/*', function(req,res){
 			return;
 		} else {
 			console.log(rows);
-			if(rows == undefined){
+			if(rows === undefined){
 				res.send({status: "IncorrectInfo"});
 				return;
 			}
-			if(rows.password == req.params[1]){
+			if(rows.password === req.params[1]){
 				var theArray = JSON.parse(rows.places);
 
 				console.log(theArray.length);
@@ -398,7 +366,10 @@ app.put('/remove/*/*', function(req,res){
 
 				for(var i = 0; i < theArray.length; i++){
 					console.log("checking: " + theArray[i].name);
-					if(theArray[i].name == name & theArray[i].city == city & theArray[i].state == state & theArray[i].country == country){
+					if(theArray[i].name === name
+					   && theArray[i].city === city
+					   && theArray[i].state === state
+					   && theArray[i].country === country){
 						console.log("Splicing: " + theArray[i].name);
 						theArray.splice(i,1);
 					}
@@ -413,25 +384,20 @@ app.put('/remove/*/*', function(req,res){
 				db.run('UPDATE peeps SET places=? WHERE username=?', [returnArray,req.params[0]], function(err,rows){
 					if(err){
 						res.send({status:'ERROR'});
-						return;
 					} else {
 						db.get('SELECT * FROM peeps WHERE username=?', req.params[0], function(err,rows){
 							if(err){
 								res.send({status:'ERROR'});
-								return;
 							} else {
 								console.log(rows);
-								if(rows == undefined){
+								if(rows === undefined){
 									res.send({status: 'ERROR'});
-									return;
 								}
-								if(rows.password == req.params[1]){
+								if(rows.password === req.params[1]){
 									console.log(rows);
 									res.send(rows);
-									return;	
 								} else {
 									res.send({status: 'ERROR'});
-									return;
 								}
 							}
 						}); 
@@ -439,11 +405,9 @@ app.put('/remove/*/*', function(req,res){
 				});
 			} else {
 				res.send({status: "IncorrectInfo"});
-				return;
-			}	
+			}
 		}
 	});
-	return;
 });
 
 app.get('/search/name/*', function(req,res){
@@ -453,11 +417,9 @@ app.get('/search/name/*', function(req,res){
 	db.all('SELECT * from locate where name=?', req.params[0],function(err,rows){
 		if(err){
 			res.send({status: 'ERROR'});
-			return;
 		} else {
-			if(rows == undefined){
+			if(rows === undefined){
 				res.send({status: 'NoResults'});
-				return;
 			} else {
 				var theLength = [];
 				
@@ -474,11 +436,9 @@ app.get('/search/name/*', function(req,res){
 				console.log(theSearch);
 
 				res.send(theSearch);
-				return;
 			}
 		}
 	});
-	return;
 });
 
 app.get('/search/type/*', function(req,res){
@@ -488,11 +448,9 @@ app.get('/search/type/*', function(req,res){
 	db.all('SELECT * from locate where type=?', req.params[0],function(err,rows){
 		if(err){
 			res.send({status: 'ERROR'});
-			return;
 		} else {
-			if(rows == undefined){
+			if(rows === undefined){
 				res.send({status: 'NoResults'});
-				return;
 			} else {
 				var theLength = [];
 				
@@ -509,22 +467,18 @@ app.get('/search/type/*', function(req,res){
 				console.log(theSearch);
 
 				res.send(theSearch);
-				return;
 			}
 		}
 	});
-	return;
 });
 
 app.get('/search/city/*/*/*', function(req,res){
 	db.all('SELECT * from locate where city=? AND state=? AND country=?', [req.params[0],req.params[1],req.params[2]],function(err,rows){
 		if(err){
 			res.send({status: 'ERROR'});
-			return;
 		} else {
-			if(rows == undefined){
+			if(rows === undefined){
 				res.send({status: 'NoResults'});
-				return;
 			} else {
 				var theLength = [];
 				
@@ -541,22 +495,18 @@ app.get('/search/city/*/*/*', function(req,res){
 				console.log(theSearch);
 
 				res.send(theSearch);
-				return;
 			}
 		}
 	});
-	return;
 });
 
 app.get('/search/state/*/*', function(req,res){
 	db.all('SELECT * from locate where state=? AND country=?', [req.params[0],req.params[1]],function(err,rows){
 		if(err){
 			res.send({status: 'ERROR'});
-			return;
 		} else {
-			if(rows == undefined){
+			if(rows === undefined){
 				res.send({status: 'NoResults'});
-				return;
 			} else {
 				var theLength = [];
 				
@@ -573,22 +523,18 @@ app.get('/search/state/*/*', function(req,res){
 				console.log(theSearch);
 
 				res.send(theSearch);
-				return;
 			}
 		}
 	});
-	return;
 });
 
 app.get('/search/country/*', function(req,res){
 	db.all('SELECT * from locate where country=?', req.params[0],function(err,rows){
 		if(err){
 			res.send({status: 'ERROR'});
-			return;
 		} else {
-			if(rows == undefined){
+			if(rows === undefined){
 				res.send({status: 'NoResults'});
-				return;
 			} else {
 				var theLength = [];
 				
@@ -605,11 +551,9 @@ app.get('/search/country/*', function(req,res){
 				console.log(theSearch);
 
 				res.send(theSearch);
-				return;
 			}
 		}
 	});
-	return;
 });
 
 app.post('/qresults', function(req,res){
@@ -649,25 +593,19 @@ app.post('/qresults', function(req,res){
 	if(mCount > dCount && mCount > rCount && mCount > sCount){
 		res.send({city: "madrid",
 				country: "spain"});
-		return;
 	}else if(dCount > mCount && dCount > rCount && dCount > sCount){
 		res.send({city:"dublin",
 				country:"ireland"});
-		return;
 	}else if(rCount> mCount && rCount > dCount && rCount> sCount){
 		res.send({city:"rio",
 				country:"brazil"});
-		return;
 	}else if(sCount > mCount && sCount > dCount && sCount > rCount){
 		res.send({city:"sydney",
 				country:"australia"});
-		return;
 	}else{
 		res.send({city:"rio",
 				country:"brazil"});
-		return;
 	}
-	return;
 });
 
 // start the server on http://localhost:3000/
